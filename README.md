@@ -21,6 +21,47 @@ pip install -e .
 python -m app.main
 ```
 
+
+## FastAPI 서버 실행
+
+CLI 대신 HTTP API로 실행할 수 있습니다.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+uvicorn app.api:app --reload --host 0.0.0.0 --port 8000
+```
+
+주요 엔드포인트:
+
+- `GET /health`: 헬스체크
+- `POST /threads`: 새 `thread_id` 발급
+- `POST /chat`: 대화 실행(필요 시 승인 인터럽트 반환)
+- `POST /chat/approval`: 승인/거절 값으로 인터럽트 지점 재개
+
+예시 요청:
+
+```bash
+# 1) thread_id 발급
+curl -s http://localhost:8000/threads -X POST
+
+# 2) 일반 질의
+curl -s http://localhost:8000/chat -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"thread_id":"<THREAD_ID>","message":"환불 정책 알려줘"}'
+
+# 3) 액션 질의(승인 필요)
+curl -s http://localhost:8000/chat -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"thread_id":"<THREAD_ID>","message":"고객에게 환불 처리 메일 보내줘"}'
+
+# 4) 인터럽트 재개
+curl -s http://localhost:8000/chat/approval -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"thread_id":"<THREAD_ID>","decision":"approved"}'
+```
+
 ## 시작점(Entry Point)과 실행 흐름
 
 - **실행 시작점**: `app/main.py` 의 `main()` 함수 (`python -m app.main`으로 호출됨)
