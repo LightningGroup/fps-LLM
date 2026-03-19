@@ -98,6 +98,51 @@ app/
 - `VECTOR_DB_API_KEY=...` (필요 시)
 - `VECTOR_DB_COLLECTION=...`
 
+환경변수 설정 방법:
+
+1. 터미널에서 임시 설정(현재 셸 세션에만 유효):
+
+   ```bash
+   export VECTOR_DB_PROVIDER=chroma
+   export VECTOR_DB_URL=http://localhost:8000
+   export VECTOR_DB_API_KEY=
+   export VECTOR_DB_COLLECTION=my_docs
+   ```
+
+2. `.env` 파일로 설정(권장):
+
+   ```env
+   VECTOR_DB_PROVIDER=chroma
+   VECTOR_DB_URL=http://localhost:8000
+   VECTOR_DB_API_KEY=
+   VECTOR_DB_COLLECTION=my_docs
+   ```
+
+   앱이 자동으로 `.env`를 읽지 않는 경우, 실행 전에 아래로 로드:
+
+   ```bash
+   set -a
+   source .env
+   set +a
+   ```
+
+3. Provider별 값 예시:
+   - Chroma
+     - `VECTOR_DB_PROVIDER=chroma`
+     - `VECTOR_DB_URL=http://localhost:8000`
+     - `VECTOR_DB_API_KEY=` (보통 비워둠)
+     - `VECTOR_DB_COLLECTION=my_docs`
+   - Pinecone
+     - `VECTOR_DB_PROVIDER=pinecone`
+     - `VECTOR_DB_URL=<pinecone 인덱스 endpoint>`
+     - `VECTOR_DB_API_KEY=<pinecone api key>`
+     - `VECTOR_DB_COLLECTION=<index 또는 namespace 이름>`
+   - pgvector
+     - `VECTOR_DB_PROVIDER=pgvector`
+     - `VECTOR_DB_URL=postgresql://USER:PASS@HOST:5432/DBNAME`
+     - `VECTOR_DB_API_KEY=` (보통 비워둠)
+     - `VECTOR_DB_COLLECTION=<테이블/컬렉션 이름>`
+
 운영 팁:
 
 - 검색 결과 품질을 위해 문서 임베딩 생성 파이프라인(ingestion)을 별도 운영
